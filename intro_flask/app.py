@@ -1,5 +1,6 @@
 from flask import Flask
-from flask import request
+#from flask import request
+from flask import render_template
 
 
 app = Flask(__name__)
@@ -17,15 +18,23 @@ def hello_images():
 
 
 @app.route('/datos')
+@app.route('/datos/<nombre>/<int:edad>')
 def datos(nombre = "invitado", edad = 27):
-    nombre = request.args.get('nombre', nombre)
-    edad = request.args.get('edad', edad)
-    return f"<p>Hola {nombre} tu edad es de {edad}</p>"
+    #nombre = request.args.get('nombre', nombre)
+    #edad = request.args.get('edad', edad)
+    #return f"<p>Hola {nombre} tu edad es de {edad}</p>"
+    context = {'nombre':nombre, 'edad':edad}
+    return render_template('index.html', **context)
+
 
 @app.route('/suma/<int:num1>/<int:num2>')
+@app.route('/suma/<int:num1>/<float:num2>')
+@app.route('/suma/<float:num1>/<int:num2>')
+@app.route('/suma/<float:num1>/<float:num2>')
 def suma(num1 = 0, num2 = 0):
     resultado = num1 + num2
-    return f"{num1} más {num2} igual a {resultado}"
+    context = {'num1':num1, 'num2':num2, 'resultado':resultado}
+    return render_template('suma.html', **context)
 
 if __name__ == "__main__":
     app.run(debug=True)
